@@ -1,6 +1,0 @@
-node_modules/
-dist/assets/*.js.map
-data/
-.testdata*/
-*.log
-.DS_Store
