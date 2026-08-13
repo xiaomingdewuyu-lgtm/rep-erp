@@ -63,7 +63,7 @@ export default function Login() {
             icon={<SettingOutlined />}
             style={{ position: 'absolute', top: 12, right: 12 }}
             onClick={() => {
-              cfgForm.setFieldsValue({ backendUrl: cur.sync.backendUrl || '' })
+              cfgForm.setFieldsValue({ backendUrl: (loadSettings().sync.backendUrl) || '' })
               setCfgOpen(true)
             }}
           />
