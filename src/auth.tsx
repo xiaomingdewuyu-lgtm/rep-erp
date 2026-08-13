@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { seedUsers, verifyLogin, loadSettings } from './db'
 import { serverLogin, serverLogout, initialSync, startSyncEngine } from './sync'
-import { loadBackendFromSettings, setBackendUrl, setToken } from './syncQueue'
+import { loadBackendFromSettings, getBackendUrl, setBackendUrl, setToken } from './syncQueue'
 import { User } from './types'
 
 const AUTH_KEY = 'rep-erp-auth'
@@ -39,8 +39,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const login = async (username: string, password: string) => {
-    const s = loadSettings()
-    const backendUrl = (s.sync as any).backendUrl as string
+    loadBackendFromSettings() // 重新计算：同源线上环境会自动设为本 origin
+    const backendUrl = getBackendUrl()
     if (backendUrl) {
       try {
         setBackendUrl(backendUrl)
@@ -77,19 +77,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <Ctx.Provider value={{ user, login, logout, usingServer: !!backendUrlSafeInit() }}>
+    <Ctx.Provider value={{ user, login, logout, usingServer: !!getBackendUrl() }}>
       {children}
     </Ctx.Provider>
   )
 }
 
-function backendUrlSafeInit() {
-  try {
-    return !!(loadSettings().sync as any).backendUrl
-  } catch {
-    return false
-  }
-}
 
 export function useAuth() {
   return useContext(Ctx)
