@@ -15,7 +15,15 @@ export function getBackendUrl() {
 }
 export function loadBackendFromSettings() {
   const s = loadSettings()
-  setBackendUrl((s as any).backendUrl || '')
+  let u = (s as any).backendUrl || ''
+  // 未配置时，若部署在真实的 http/https 域名（非 localhost），自动同源走云端
+  if (!u && typeof window !== 'undefined' && window.location.protocol.startsWith('http')) {
+    const host = window.location.hostname
+    if (host !== 'localhost' && !host.startsWith('127.')) {
+      u = window.location.origin
+    }
+  }
+  setBackendUrl(u)
 }
 
 export function setToken(t: string) {
