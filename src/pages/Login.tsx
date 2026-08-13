@@ -53,7 +53,7 @@ export default function Login() {
       }}
     >
       <Card style={{ width: 380, maxWidth: '100%', borderRadius: 12, boxShadow: '0 8px 30px rgba(0,0,0,0.08)', position: 'relative' }}>
-        <Tooltip title="配置后端服务地址（多人共享数据）">
+        <Tooltip title="高级设置：可指定自定义后端地址（一般无需修改）">
           <Button
             type="text"
             icon={<SettingOutlined />}
@@ -84,23 +84,23 @@ export default function Login() {
         </Form>
         {cur.sync.backendUrl ? (
           <Text type="success" style={{ display: 'block', textAlign: 'center', marginTop: 12, fontSize: 12 }}>
-            已连接共享后端
+            已连接指定共享后端
           </Text>
         ) : (
           <Text type="secondary" style={{ display: 'block', textAlign: 'center', marginTop: 12, fontSize: 12 }}>
-            未配置后端：点击右上角齿轮可启用多人共享
+            云端版本：数据自动同步至服务端
           </Text>
         )}
       </Card>
 
-      <Modal title="配置后端服务地址" open={cfgOpen} onOk={saveCfg} onCancel={() => setCfgOpen(false)} okText="保存" cancelText="取消" destroyOnClose>
+      <Modal title="高级设置（自定义后端地址）" open={cfgOpen} onOk={saveCfg} onCancel={() => setCfgOpen(false)} okText="保存" cancelText="取消" destroyOnClose>
         <Form form={cfgForm} layout="vertical">
           <Form.Item
             name="backendUrl"
             label="后端地址"
-            extra="多人共享时填写后端服务地址（例如 https://your-host 或留空表示与前端同源）。配置后登录将走服务端校验。"
+            extra="一般无需修改。留空表示使用当前网址作为服务端（即当前云端版本，数据自动同步）；如自行部署了独立后端，可在此填入其地址。"
           >
-            <Input placeholder="https://your-host （留空=同源）" />
+            <Input placeholder="https://your-host （留空=同源/云端）" />
           </Form.Item>
         </Form>
       </Modal>
