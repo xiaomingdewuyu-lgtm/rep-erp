@@ -4,7 +4,7 @@ import { UserOutlined, LockOutlined, DashboardOutlined, SettingOutlined } from '
 import { useAuth } from '../auth'
 import { useNavigate } from 'react-router-dom'
 import { loadSettings, saveSettings } from '../db'
-import { setBackendUrl } from '../syncQueue'
+import { setBackendUrl, loadBackendFromSettings, getBackendUrl } from '../syncQueue'
 
 const { Title, Text } = Typography
 
@@ -39,7 +39,11 @@ export default function Login() {
     })
   }
 
-  const cur = loadSettings()
+  const [syncOn, setSyncOn] = useState(!!getBackendUrl())
+  useEffect(() => {
+    loadBackendFromSettings()
+    setSyncOn(!!getBackendUrl())
+  }, [])
 
   return (
     <div
@@ -82,13 +86,13 @@ export default function Login() {
             登 录
           </Button>
         </Form>
-        {cur.sync.backendUrl ? (
+        {syncOn ? (
           <Text type="success" style={{ display: 'block', textAlign: 'center', marginTop: 12, fontSize: 12 }}>
-            已连接指定共享后端
+            已连接云端服务
           </Text>
         ) : (
           <Text type="secondary" style={{ display: 'block', textAlign: 'center', marginTop: 12, fontSize: 12 }}>
-            云端版本：数据自动同步至服务端
+            本地模式：数据仅保存在本设备
           </Text>
         )}
       </Card>
