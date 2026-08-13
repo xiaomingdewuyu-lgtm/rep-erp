@@ -1,0 +1,22 @@
+# Render 部署蓝图：一个 Web 服务同时托管前端 + 后端 API（同源、免备案）
+services:
+  - type: web
+    name: rep-erp
+    runtime: node
+    plan: free
+    region: oregon          # 境外节点（美国），无需 ICP 备案
+    branch: main
+    buildCommand: npm install && npm run build
+    startCommand: node server/index.mjs
+    healthCheckPath: /api/health
+    envVars:
+      - key: CORS_ORIGIN
+        value: "*"
+      - key: PORT
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+    # 说明：免费实例在一段时间无访问后会休眠，首次访问需等待数秒唤醒。
+    # 数据持久化：在 Render 控制台的 Environment 里设置 DATABASE_URL（指向外部免费
+    # Postgres，如 Neon/Supabase）。设置后后端自动改用数据库存储，重启/休眠均不丢数据，
+    # 无需挂载持久磁盘（免费版也不支持 Disk）。未设置时回退到本地文件（仅本地开发用）。
