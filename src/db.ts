@@ -169,7 +169,9 @@ export async function verifyLogin(username: string, password: string): Promise<U
 }
 
 export function listUsers(): Promise<User[]> {
-  return db.users.orderBy('createdAt').toArray()
+  return db.users.toArray().then((us) =>
+    us.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0)),
+  )
 }
 
 export async function addUser(data: { username: string; name?: string; password: string; role: 'admin' | 'viewer' }) {
