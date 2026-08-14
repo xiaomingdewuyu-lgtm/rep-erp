@@ -32,6 +32,7 @@ import {
   deleteUser,
 } from '../db'
 import { manualSync, serverListUsers, serverAddUser, serverSetPassword, serverSetRole, serverDeleteUser } from '../sync'
+import { getBackendUrl, loadBackendFromSettings } from '../syncQueue'
 import { User } from '../types'
 import { PageHeader } from '../components/common'
 import { exportJSON, exportWorkbook } from '../utils/excel'
@@ -48,11 +49,14 @@ export default function SettingsPage() {
   const [addForm] = Form.useForm()
   const [pwdForm] = Form.useForm()
 
+  loadBackendFromSettings()
   const settings = loadSettings()
   const [backendUrl, setBackendUrl] = useState(settings.sync.backendUrl || '')
   const [serverUsers, setServerUsers] = useState<User[]>([])
 
-  const usingServer = !!backendUrl
+  // 是否云端/多人模式：以「运行时真实后端」为准（含同源自动云端），而非仅看已保存的显式地址
+  // 云端版 saved backendUrl 为空，但同源会自动指向 origin，必须按运行时判定
+  const [usingServer, setUsingServer] = useState(() => !!getBackendUrl())
   const localUsers = useLiveQuery(() => listUsers(), [], [] as User[])
 
   const [addOpen, setAddOpen] = useState(false)
@@ -250,6 +254,8 @@ export default function SettingsPage() {
                 const s = loadSettings()
                 s.sync = { ...s.sync, backendUrl: backendUrl.trim() }
                 saveSettings(s)
+                loadBackendFromSettings()
+                setUsingServer(!!getBackendUrl())
                 message.success('已保存后端地址（重启登录后生效）')
               }}
             >
