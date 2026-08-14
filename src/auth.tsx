@@ -73,7 +73,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   function getBackendUrlSafe() {
-    return !!(loadSettings().sync as any).backendUrl
+    return !!getBackendUrl()
   }
 
   return (
