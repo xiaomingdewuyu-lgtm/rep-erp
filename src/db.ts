@@ -475,15 +475,24 @@ import { AppSettings, SyncSettings } from './types'
 const SETTINGS_KEY = 'rep-erp-settings'
 
 export function loadSettings(): AppSettings {
-  try {
-    const raw = localStorage.getItem(SETTINGS_KEY)
-    if (raw) return JSON.parse(raw)
-  } catch {}
-  return {
+  const defaults: AppSettings = {
     currentUser: '管理员',
     role: 'admin',
     sync: { enabled: false, backendUrl: '', lastSyncAt: undefined },
   }
+  try {
+    const raw = localStorage.getItem(SETTINGS_KEY)
+    if (raw) {
+      const parsed = JSON.parse(raw)
+      // 兼容旧版存储：确保 sync 字段存在，避免 settings.sync.backendUrl 抛错
+      return {
+        ...defaults,
+        ...parsed,
+        sync: { ...defaults.sync, ...(parsed.sync || {}) },
+      }
+    }
+  } catch {}
+  return defaults
 }
 
 export function saveSettings(s: AppSettings) {
