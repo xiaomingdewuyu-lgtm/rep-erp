@@ -16,6 +16,7 @@ import RecycleBin from './pages/RecycleBin'
 import SettingsPage from './pages/Settings'
 import Login from './pages/Login'
 import { useAuth } from './auth'
+import ErrorBoundary from './components/ErrorBoundary'
 
 export default function App() {
   const { user } = useAuth()
@@ -23,25 +24,27 @@ export default function App() {
 
   return (
     <Layout>
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/suppliers" element={<SupplierList />} />
-        <Route path="/suppliers/:id/orders" element={<SupplierOrders />} />
-        <Route path="/buyers" element={<BuyerList />} />
-        <Route path="/buyers/:id/orders" element={<BuyerOrders />} />
-        <Route path="/products" element={<ProductList />} />
-        <Route path="/parts" element={<PartList />} />
-        <Route path="/inventory/products" element={<Inventory target="products" />} />
-        <Route path="/inventory/parts" element={<Inventory target="parts" />} />
-        <Route path="/inventory/products/:id/parts" element={<Inventory target="productParts" />} />
-        <Route path="/products/:id/orders" element={<ProductOrders />} />
-        <Route path="/orders" element={<OrderList />} />
-        <Route path="/orders/:id" element={<OrderDetail />} />
-        <Route path="/finance" element={<Finance />} />
-        <Route path="/recycle" element={<RecycleBin />} />
-        <Route path="/settings" element={<SettingsPage />} />
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
+      <ErrorBoundary>
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/suppliers" element={<SupplierList />} />
+          <Route path="/suppliers/:id/orders" element={<SupplierOrders />} />
+          <Route path="/buyers" element={<BuyerList />} />
+          <Route path="/buyers/:id/orders" element={<BuyerOrders />} />
+          <Route path="/products" element={<ProductList />} />
+          <Route path="/parts" element={<PartList />} />
+          <Route path="/inventory/products" element={<Inventory target="products" />} />
+          <Route path="/inventory/parts" element={<Inventory target="parts" />} />
+          <Route path="/inventory/products/:id/parts" element={<Inventory target="productParts" />} />
+          <Route path="/products/:id/orders" element={<ProductOrders />} />
+          <Route path="/orders" element={<OrderList />} />
+          <Route path="/orders/:id" element={<OrderDetail />} />
+          <Route path="/finance" element={<Finance />} />
+          <Route path="/recycle" element={<RecycleBin />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </ErrorBoundary>
     </Layout>
   )
 }
