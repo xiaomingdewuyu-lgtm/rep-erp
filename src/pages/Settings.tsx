@@ -57,7 +57,12 @@ export default function SettingsPage() {
   // 是否云端/多人模式：以「运行时真实后端」为准（含同源自动云端），而非仅看已保存的显式地址
   // 云端版 saved backendUrl 为空，但同源会自动指向 origin，必须按运行时判定
   const [usingServer, setUsingServer] = useState(() => !!getBackendUrl())
-  const localUsers = useLiveQuery(() => listUsers(), [], [] as User[])
+  // 本地账号查询只在「本地模式」下执行；云端模式不碰 Dexie，避免无谓查询
+  const localUsers = useLiveQuery(
+    () => (usingServer ? Promise.resolve([] as User[]) : listUsers()),
+    [usingServer],
+    [] as User[],
+  )
 
   const [addOpen, setAddOpen] = useState(false)
   const [pwdOpen, setPwdOpen] = useState(false)
