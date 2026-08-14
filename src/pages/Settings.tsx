@@ -51,7 +51,7 @@ export default function SettingsPage() {
 
   loadBackendFromSettings()
   const settings = loadSettings()
-  const [backendUrl, setBackendUrl] = useState(settings.sync.backendUrl || '')
+  const [backendUrl, setBackendUrl] = useState(settings.sync?.backendUrl || '')
   const [serverUsers, setServerUsers] = useState<User[]>([])
 
   // 是否云端/多人模式：以「运行时真实后端」为准（含同源自动云端），而非仅看已保存的显式地址
